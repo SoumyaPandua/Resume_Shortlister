@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model ResumeAnalysis {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeName   String
+  jdName       String
+  overallScore Float
+  shortlisted  Boolean
+  scannedAt    DateTime @default(now())
+
+
+  skillsMatch             Float
+  skillsReason            String
+
+  skillsResumeValue       String
+  skillsJDValue           String
+
+  educationMatch          Float
+  educationReason         String
+  educationResumeValue    String
+  educationJDValue        String
+
+  jobRoleMatch            Float
+  jobRoleReason           String
+  jobRoleResumeValue      String
+  jobRoleJDValue          String
+
+  experienceMatch         Float
+  experienceReason        String
+  experienceResumeValue   String
+  experienceJDValue       String
+
+  overallExplanation      String
+  aiEstimate              Float
+}

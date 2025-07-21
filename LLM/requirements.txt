@@ -1,0 +1,10 @@
+python-docx 
+PyPDF2 
+chromadb
+sentence_transformers
+nltk
+PyMuPDF
+pdfplumber
+fastapi
+python-multipart
+python-dotenv
