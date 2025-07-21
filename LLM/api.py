@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import tempfile
 import os
 from main import main as run_pipeline
+# import sys
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 app = FastAPI()
 

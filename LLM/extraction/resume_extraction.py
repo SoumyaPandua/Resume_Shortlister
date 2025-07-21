@@ -12,7 +12,6 @@ load_dotenv()
  
 class LLMResumeParser:
     def __init__(self, model_name=os.getenv("MODEL_NAME")):
-        load_dotenv()
         self.model = model_name
         self.client = InferenceClient(model=self.model, token=os.getenv("TOKEN"))
         self.system_prompt = self._build_system_prompt()
