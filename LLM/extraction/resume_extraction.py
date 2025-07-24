@@ -20,76 +20,52 @@ class LLMResumeParser:
         return '''
 
 You are an expert resume parser.
-
+ 
 Your task is to extract structured data from unstructured resume text into exactly five predefined flat sections. You must return only one well-formed JSON object using the exact keys and definitions below. Do not add, omit, rename, or modify any section.
-
+ 
 1. "skill"
 Include only hard technical skills such as programming languages, frameworks, libraries, software tools, platforms, cloud services, or technical methodologies.
- Do NOT include certifications, soft skills, role descriptions, degrees, or company names.
- Examples: Python, TensorFlow, SQL, AWS, Docker, CI/CD, Agile, Power BI
-
+Do NOT include certifications, soft skills, role descriptions, degrees, or company names.
+Examples: Python, TensorFlow, SQL, AWS, Docker, CI/CD, Agile, Power BI
+ 
 2. "education"
 Include only formal academic qualifications such as:
-
-Schooling (10th, 12th)
-
-Undergraduate (e.g., B.Tech, BSc)
-
-Postgraduate (e.g., M.Tech, MBA, MSc)
-
-Doctorate (PhD)
-
-Each item must contain only the degree/program and institution/school/college name.
- Do NOT include years, CGPA, certifications, online courses, bootcamps, or platforms like Coursera.
- Examples:
-
-B.Tech in Computer Science from IIT Bombay
-
-10th from Delhi Public School
-
-MBA from IIM Ahmedabad
-
+- Schooling (10th, 12th)
+- Undergraduate (B.Tech, BSc)
+- Postgraduate (M.Tech, MBA, MSc)
+- Doctorate (PhD)
+ 
+Each item must contain only the degree/program and institution name. Do NOT include years, CGPA, platforms like Coursera.
+ 
+Examples:
+- B.Tech in Computer Science from IIT Bombay
+- 10th from Delhi Public School
+- MBA from IIM Ahmedabad
+ 
 3. "experience"
-Each experience must be written as a single plain text string. Do not return objects or structured fields. Combine job title, company, location, and responsibilities into a single string, separated by punctuation.
-
+Each experience must be written as a single plain text string. Combine job title, company, location, and responsibilities into one sentence.
+ 
 Example:
 "Data Scientist at ABM, Nov22–Present — Developed SQL AI Agent using LangChain and Streamlit for natural language to SQL query conversion."
-
-Do not use key-value pairs like { "Job title": ..., "Company": ... }
-Do not return arrays of objects or nested fields.
-
+ 
+Do not use structured fields or key-value format.
+ 
 4. "job role"
-Include only one specific job title that best represents the candidate’s most recent or primary designation.
- Do NOT include multiple titles or composite roles.
- Example:
-
-Data Scientist
-
+Include one specific job title that best represents the candidate’s most recent or primary designation.
+Example:
+- Data Scientist
+ 
 5. "other information"
-Include all remaining information that does not fit the above four sections, such as:
-
-Certifications
-
-Soft skills
-
-Languages spoken
-
-Hobbies and interests
-
-Awards and achievements
-
-Relocation or career objectives
-
-Extracurriculars or personal statements
-
-Certifications from any provider (e.g., AWS, Coursera, Google) should be included here.
-
- Output Format
-Return exactly this structure:
-
-json
-Copy
-Edit
+Include everything else:
+- Certifications
+- Soft skills
+- Languages spoken
+- Hobbies and interests
+- Awards, objectives, extracurriculars
+ 
+Certifications should go here regardless of provider.
+ 
+Output Format:
 {
   "skill": [],
   "education": [],
@@ -97,24 +73,12 @@ Edit
   "job role": [],
   "other information": []
 }
- Strict Rules
-Each section must be a flat list of plain text strings.
-
-Do NOT return nested JSON or arrays of objects.
-
-Do NOT infer or hallucinate data not explicitly in the text.
-
-Do NOT wrap the JSON in an array or include any other explanation.
-
-Do NOT include the prompt or label the JSON.
-
-Replace all newlines (\n, \\n) and tab characters (\t, \\t) with \\n and \\t inside values.
-
-All five keys must always be present — even if their lists are empty.
-
-Each value must appear in only one section.
-Do NOT return nested JSON or key-value objects inside any section — each entry must be a plain string.
-"job role" must contain only one title — if more are present, choose the most representative one.
+ 
+Strict Rules:
+- Use plain text list for each key
+- Do NOT use nested objects or keys
+- Do NOT hallucinate
+- Do NOT wrap output in any explanation
 '''
  
     def clean_text(self, text: str) -> str:
@@ -137,7 +101,9 @@ Do NOT return nested JSON or key-value objects inside any section — each entry
            
             response = self.client.chat_completion(
                 messages=messages,
-                max_tokens=None
+                max_tokens=None,
+                temperature=0.0,
+                top_p=1.0
             )
            
             # Extract the content from the response
